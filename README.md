@@ -77,6 +77,24 @@ app.listen(3000)
 
 > 若未来不使用自定义域名而是仓库路径（`https://user.github.io/repo`），请将 `vite.config.ts` 的 `base` 设置为 `'/repo/'`。
 
+## CI/CD
+
+本仓库内置两份工作流：
+
+- `.github/workflows/pages.yml`：
+  - 触发：`push` 到 `main` 或手动 `workflow_dispatch`
+  - 操作：安装依赖 → `npm run build` → 上传 `dist` 工件 → `actions/deploy-pages` 部署到 GitHub Pages 环境
+  - 权限：`pages: write`、`id-token: write`
+- `.github/workflows/ci.yml`：
+  - 触发：PR 指向 `main`，或 `push` 到 `main`
+  - 操作：安装依赖 → `npm run typecheck`（存在则执行）→ `npm run build`
+
+注意事项：
+
+- 仓库 Settings → Pages → Source 选择“GitHub Actions”。
+- 自定义域名在 Settings → Pages 中填写 `www.weihe-life`，并在 DNS 配置 CNAME 指向 `iceberg211.github.io`。
+- 等域名生效后，在 Pages 设置里启用 Enforce HTTPS。
+
 ## 目录结构
 
 ```
@@ -109,4 +127,3 @@ app.listen(3000)
   - 若使用自定义域名，确认 DNS CNAME 正确、生效。
 - 如何清空聊天记录？
   - 界面右上角“清空”按钮，或浏览器清理站点数据。
-
