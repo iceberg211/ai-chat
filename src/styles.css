@@ -1,0 +1,27 @@
+:root {
+  --container-max: 960px;
+}
+
+html, body, #root {
+  height: 100%;
+}
+
+.container {
+  max-width: var(--container-max);
+  margin: 0 auto;
+}
+
+.chat-list {
+  height: calc(100vh - 280px);
+  overflow: auto;
+  padding: 8px 4px;
+}
+
+.composer {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px;
+  align-items: end;
+  margin-top: 12px;
+}
+
