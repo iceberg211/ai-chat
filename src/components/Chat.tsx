@@ -85,9 +85,9 @@ export default function Chat() {
           <Empty description="开始对话吧" />
         ) : (
           <Space direction="vertical" style={{ width: '100%' }} size="middle">
-            {messages.map(m => (
-              <MessageBubble key={m.id} role={m.role} content={m.content} />
-            ))}
+            {messages.filter(m => m.role !== 'system').map(m => (
+              <MessageBubble key={m.id} role={m.role as 'user' | 'assistant'} content={m.content} />
+              ))}
           </Space>
         )}
         {loading && (
