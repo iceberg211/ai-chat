@@ -5,7 +5,7 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   // 配置为在 /aichat 路径下访问
-  base: "/aichat/",
+  base: "/ai-chat/",
   server: {
     port: 5173,
   },
