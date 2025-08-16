@@ -22,15 +22,27 @@
 
 ## AI 服务对接
 
-默认使用 Mock 回复。若有后端代理，可设置一个无鉴权的 HTTPS 端点给前端调用（不在前端暴露任何私密 Key）。
+默认使用 Mock 回复。若有后端代理，可设置一个无鉴权的 HTTPS 端点给前端调用（不在前端暴露任何私密 Key）。本项目支持两种接入方式：GraphQL（推荐，适配 Cloudflare Workers 方案）与简单 REST（向下兼容）。
 
 - 环境变量（在 `.env` 或构建时注入）：
-  - `VITE_CHAT_API_URL`：你的后端聊天接口地址
-- 请求/响应约定：
+  - GraphQL（优先使用，若存在则走 GraphQL）：
+    - `VITE_GRAPHQL_API_URL`：GraphQL 端点，例如 `http://127.0.0.1:8787/aichat/graphql`
+    - `VITE_CHAT_PROVIDER`：模型提供方，默认 `DEEPSEEK`；可选 `OPENAI`/`DEEPSEEK`
+    - `VITE_CHAT_MODEL`：模型名，默认 `deepseek-chat`（如使用 OpenAI 可设为 `gpt-4o-mini` 等）
+    - `VITE_CHAT_TEMPERATURE`：温度，可选，数字
+  - REST（备选回退）：
+    - `VITE_CHAT_API_URL`：你的后端聊天接口地址（POST）
+
+- GraphQL 请求/响应约定（Cloudflare Workers 参考）：
+  - Mutation：`chat(input: { provider, model, messages, temperature? }) { content reasoning }`
+  - 由前端传参的 `messages` 结构：`Array<{ role: 'user'|'assistant'|'system', content: string }>`
+  - 前端取 `data.chat.content` 作为回复文本
+
+- REST 请求/响应约定（向后兼容）：
   - 请求：`POST { messages: Array<{ id, role: 'user'|'assistant'|'system', content }> }`
   - 响应：`{ reply: string }`
 
-示例 Node/Express 伪代码（请部署在你自己的服务器、Cloudflare Workers、Vercel 等平台）：
+示例 Node/Express 伪代码（REST，若不使用 GraphQL）：
 
 ```
 import express from 'express'
